@@ -1,6 +1,8 @@
 # Nova Optimal Image field
 
-
+This field differs from the standard Image field in that after the image is loaded using it, image optimization takes 
+place. For image optimization the package (spatie/laravel-image-optimizer)[https://github.com/spatie/laravel-image-optimizer] 
+is used. 
 
 ## Installation
 
@@ -9,6 +11,9 @@ Install the package into a Laravel app that uses [Nova](https://nova.laravel.com
 ```bash
 composer require yarbala/nova-optimal-image-field
 ```
+
+Read the documentation (spatie/laravel-image-optimizer)[https://github.com/spatie/laravel-image-optimizer] for
+optimizers setup information on the server side. 
 
 ## Usage
 
