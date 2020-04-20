@@ -7,7 +7,7 @@
 Install the package into a Laravel app that uses [Nova](https://nova.laravel.com) with Composer:
 
 ```bash
-composer require inspheric/nova-url-field
+composer require yarbala/nova-optimal-image-field
 ```
 
 ## Usage
