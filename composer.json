@@ -1,9 +1,19 @@
 {
     "name": "yarbala/optimal-image",
-    "description": "A Laravel Nova field.",
+    "description": "Nova Optimal Image field",
+    "authors": [
+        {
+            "name": "Yaraslau Mutallimov",
+            "email": "yarbala@gmail.com",
+            "homepage": "https://yarbala.com/"
+        }
+    ],
+    "homepage": "https://github.com/spatie/image-optimizer",
     "keywords": [
         "laravel",
-        "nova"
+        "nova",
+        "image optimization",
+        "seo"
     ],
     "license": "MIT",
     "require": {

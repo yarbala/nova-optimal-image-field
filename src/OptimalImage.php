@@ -5,7 +5,7 @@ namespace Yarbala\OptimalImage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Laravel\Nova\Fields\Image;
 use Spatie\ImageOptimizer\OptimizerChain as ImageOptimizer;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Данный класс унаследован от станадартного класса Image. Его предназаначение, это переопределить процесс записи
@@ -54,7 +54,7 @@ class OptimalImage extends Image
     }
 
     /**
-     * Функция производящая оптимизацию изображение
+     * Функция производящая оптимизацию изображения
      *
      * @param $fileName
      * @throws FileNotFoundException
@@ -62,19 +62,19 @@ class OptimalImage extends Image
     protected function optimizeImage($fileName)
     {
         $needsUploadBack = false;
-        $localDisk = 'local';
+        $localDisk = $this->getLocalDisk();
         $disk = $this->getStorageDisk();
 
         /*  Так как базовый компонент работает с классом Storage, а Spatie\ImageOptimizer работает с локальными файлами
             мы выгрузим файл в локальное хранилище в случае надобности
         */
-        if ($disk === $localDisk || Storage::disk($localDisk)->exists($fileName)) {
-            $path = Storage::disk($localDisk)->path($fileName);
-        } else {
+        if (!Storage::disk($localDisk)->exists($fileName)) {
             Storage::disk($localDisk)->put($fileName, Storage::disk($disk)->get($fileName));
-            $path = Storage::disk($localDisk)->path($fileName);
             $needsUploadBack = true;
         }
+
+        // Получаем путь к изображению в локальном хранилище
+        $path = Storage::disk($localDisk)->path($fileName);
 
         // Оптимизация изображения
         app(ImageOptimizer::class)->optimize($path);
@@ -82,6 +82,28 @@ class OptimalImage extends Image
         // Если мы вгружали файл, загрузим его обратно
         if ($needsUploadBack) {
             Storage::disk($disk)->put($fileName, Storage::disk($localDisk)->get($fileName));
+            Storage::disk($localDisk)->delete($fileName);
         }
+    }
+
+    /**
+     * Установка локального хранилища для обработки изображений
+     *
+     * @param string $disk
+     * @return OptimalImage
+     */
+    public function localDisk(string $disk)
+    {
+        return $this->withMeta(['localDisk' => $disk]);
+    }
+
+    /**
+     * Получение локального хранилища
+     *
+     * @return string
+     */
+    protected function getLocalDisk()
+    {
+        return $this->meta['localDisk'] ?? 'local';
     }
 }
